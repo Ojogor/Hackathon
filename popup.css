@@ -1,0 +1,126 @@
+/* General popup styles */
+body {
+    font-family: Arial, sans-serif;
+    width: 360px;
+    padding: 8px;
+    background: #f9f9f9;
+    color: #000;
+  }
+  /* Top bar (search input and buttons) */
+  #top-bar {
+    display: flex;
+    align-items: center;
+    gap: 5px;
+  }
+  #top-bar input {
+    flex: 1;
+    padding: 4px;
+    font-size: 0.9em;
+  }
+  #top-bar button {
+    cursor: pointer;
+    padding: 4px 6px;
+  }
+  #settingsBtn {
+    /* Make the settings (gear) button look like an icon */
+    background: none;
+    border: none;
+    font-size: 1.2em;
+    padding: 0 4px;
+  }
+  /* Product info section */
+  #productInfo {
+    display: flex;
+    align-items: center;
+    margin-top: 10px;
+  }
+  #productInfo img {
+    width: 80px;
+    height: 80px;
+    object-fit: cover;
+    border-radius: 4px;
+    margin-right: 10px;
+  }
+  #productDetails h2 {
+    font-size: 1.1em;
+    margin: 0;
+  }
+  #productDetails p {
+    margin: 2px 0 0;
+    font-size: 0.9em;
+  }
+  /* Containers for alternatives and suggestions */
+  #alternativesContainer, #suggestionsContainer {
+    margin-top: 10px;
+  }
+  #alternativesContainer h3, #suggestionsContainer h3 {
+    font-size: 1em;
+    margin: 5px 0;
+  }
+  /* Card list (alternatives and suggestions) */
+  .card-list {
+    display: flex;
+    gap: 8px;
+    overflow-x: auto;
+    padding-bottom: 5px;
+  }
+  .card {
+    flex: 0 0 auto;
+    background: #fff;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    padding: 5px;
+    text-align: center;
+    cursor: pointer;
+    width: 80px;
+  }
+  .card img {
+    width: 60px;
+    height: 60px;
+    object-fit: cover;
+    border-radius: 4px;
+  }
+  .card p {
+    margin: 4px 0 0;
+    font-size: 0.85em;
+  }
+  /* Highlight the selected alternative card */
+  .card.selected {
+    border-color: #0077cc;
+    background: #e6f2ff;
+  }
+  /* Detailed alternative info section */
+  #alternativeInfo {
+    margin-top: 10px;
+    padding-top: 5px;
+    border-top: 1px solid #ddd;
+  }
+  #alternativeInfo h2 {
+    font-size: 1.1em;
+    margin: 0 0 5px;
+  }
+  #alternativeInfo p {
+    margin: 5px 0;
+  }
+  #alternativeMetrics {
+    margin: 5px 0;
+    padding-left: 20px;
+  }
+  #alternativeMetrics li {
+    margin-bottom: 3px;
+  }
+  /* Fact/highlight box in the details section */
+  .fact {
+    font-style: italic;
+    background: #eef;
+    padding: 5px;
+    border-radius: 4px;
+    margin-top: 5px;
+  }
+  /* Message text (no results or Canadian product message) */
+  #message, #statusMessage {
+    font-style: italic;
+    color: #555;
+    margin: 10px 0;
+  }
+  

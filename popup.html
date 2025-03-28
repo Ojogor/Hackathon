@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="UTF-8">
+  <title>Canadian Alternatives</title>
+  <link rel="stylesheet" href="popup.css">
+</head>
+<body>
+  <!-- Top bar with search input and settings button -->
+  <div id="top-bar">
+    <input type="text" id="searchInput" placeholder="Search product..." />
+    <button id="searchBtn" title="Search">&#128269;</button>
+    <button id="settingsBtn" title="Settings">&#9881;</button>
+  </div>
+  <!-- Results section (hidden by default) -->
+  <div id="resultSection" style="display:none;">
+    <div id="productInfo">
+      <img id="productImage" src="" alt="Product image" />
+      <div id="productDetails">
+        <h2 id="productName"></h2>
+        <p id="productOrigin"></p>
+      </div>
+    </div>
+    <!-- Status message for Canadian product or no alternatives -->
+    <p id="statusMessage" style="display:none;"></p>
+    <!-- Alternatives and suggestions lists -->
+    <div id="alternativesContainer">
+      <h3>Canadian Alternatives</h3>
+      <div id="altList" class="card-list"></div>
+    </div>
+    <div id="suggestionsContainer">
+      <h3>User Suggestions</h3>
+      <div id="suggestionList" class="card-list"></div>
+    </div>
+    <!-- Detailed info about the selected Canadian alternative -->
+    <div id="alternativeInfo">
+      <h2 id="alternativeName"></h2>
+      <p id="alternativeStory"></p>
+      <ul id="alternativeMetrics"></ul>
+      <p id="categoryFact" class="fact"></p>
+    </div>
+  </div>
+  <!-- Message box for errors or no results -->
+  <div id="message" style="display:none;"></div>
+  <script src="popup.js"></script>
+</body>
+</html>
