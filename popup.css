@@ -1,5 +1,10 @@
 body {
-  font-family: 'Arial', 'Helvetica', sans-serif;
+/*  font-family: 'Arial', 'Helvetica', sans-serif; */
+  
+  font-family: "Radio Canada", sans-serif;
+  font-optical-sizing: auto;
+  font-style: normal;
+
   width: 401px;
   height: 511px;
   background: #FBF7F7;
@@ -11,22 +16,36 @@ body {
   padding: 0;
 }
 
+h1, h2, h3, h5, h6 {
+    font-family: "Gravitas One", "Radio Canada", sans-serif;
+}
+
+h1 {
+    color: red;
+    text-shadow: 1px 1px 2px black;
+}
+
+h3 {
+    margin: 4px;
+      background: #e6f7e6;
+      padding: 5px 0;
+}
+
 /* Header section */
 #head_element {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  padding: 15px 20px;
-  background-color: #FBF7F7;
-  margin-bottom: 5px;
+  padding: 8px 20px;
+  margin-bottom: 2px;
 }
 
 #Logo_Name {
-  font-size: 22px;
-  font-family: 'Arial', 'Helvetica', sans-serif;
-  font-style: italic;
+  font-size: 1.8rem;
+  font-family: "Frijole", "Gravitas One", "Radio Canada", sans-serif;
+/*  font-style: italic; */
   font-weight: 600;
-  color: #FF8181;
+  color: #c9222c;
   margin: 0;
 }
 
@@ -47,20 +66,26 @@ body {
   height: 2rem;
 }
 
+.big-bg {
+    background-image: url("images/brand_logo.png");
+    background-size: contain;
+    background-position: center;
+    background-repeat: no-repeat;
+}
 /* Top bar (search input and buttons) */
 #top-bar {
   display: flex;
   align-items: center;
   gap: 10px;
   width: 90%;
-  margin: 2rem auto 1rem;
+  margin: .5rem auto .5rem;
   position: relative;
 }
 
 #top-bar input {
   flex: 1;
-  padding: 8px 15px;
-  font-family: 'Arial', 'Helvetica', sans-serif;
+  padding: 3px 15px;
+/*  font-family: 'Arial', 'Helvetica', sans-serif;*/
   font-size: 0.9em;
   border: 1px solid #ccc;
   border-radius: 22px;
@@ -99,7 +124,7 @@ body {
 #productInfo {
   display: flex;
   align-items: center;
-  margin: 15px auto;
+  margin: 8px auto;
   flex-direction: column;
   padding: 0 15px;
 }
@@ -109,7 +134,7 @@ body {
   height: 90px;
   object-fit: cover;
   box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
-  margin: 10px;
+  margin: 8px;
   border-radius: 8px;
 }
 
@@ -124,30 +149,37 @@ body {
 }
 
 #productOrigin {
+  background: #f9f9f9;
+  color: #2e7d32;
+  border-radius: 4px;
   text-align: center;
   font-style: italic;
   color: #666;
-  margin: 5px 0 15px;
+  margin: 12px 10px;
+padding: 6px;
 }
 
 #statusMessage {
-  background: #e6f7e6;
+  background: #f9f9f9;
   color: #2e7d32;
-  padding: 8px 12px;
+  padding: 4px 12px;
   border-radius: 4px;
   text-align: center;
-  margin: 10px 15px;
+  margin: 10px;
   font-weight: bold;
 }
 
 /* Alternatives section */
 #alternativesContainer, #suggestionsContainer {
-  margin: 15px 0;
+  margin: 10px 0;
   position: relative;
   padding: 0 15px;
 }
 
 #alternativesContainer h3, #suggestionsContainer h3 {
+  background: #f9f9f9;
+  color: #2e7d32;
+  border-radius: 4px;
   font-size: 1em;
   margin: 5px 0;
   color: #333;
@@ -171,7 +203,7 @@ body {
 }
 
 .scroll-btn {
-  background: rgba(255, 129, 129, 0.8);
+  background: rgba(201, 34, 44, 0.8);
   color: white;
   border: none;
   border-radius: 50%;
@@ -194,7 +226,7 @@ body {
   display: flex;
   gap: 10px;
   overflow-x: auto;
-  padding: 10px 5px;
+  padding: 4px 5px;
   scroll-behavior: smooth;
   -ms-overflow-style: none;  /* Hide scrollbar in IE and Edge */
   scrollbar-width: none;  /* Hide scrollbar in Firefox */
@@ -209,7 +241,7 @@ body {
   background: #fff;
   border: 1px solid #ddd;
   border-radius: 8px;
-  padding: 8px;
+  padding: 4px;
   text-align: center;
   cursor: pointer;
   width: 100px;
@@ -280,8 +312,8 @@ body {
 
 /* Detailed alternative info section */
 #alternativeInfo {
-  margin: 15px;
-  padding: 15px;
+  margin: 10px;
+  padding: 8px;
   border-top: 1px solid #eee;
   background: #fff;
   border-radius: 8px;
@@ -301,7 +333,7 @@ body {
 }
 
 #alternativeMetrics {
-  margin: 10px 0;
+  margin: 8px 0;
   padding-left: 20px;
 }
 
@@ -318,21 +350,21 @@ body {
 .fact {
   font-style: italic;
   background: #f0f5ff;
-  padding: 10px;
+  padding: 6px;
   border-radius: 6px;
-  margin-top: 10px;
+  margin-top: 8px;
   border-left: 3px solid #0077cc;
   color: #0077cc;
 }
 
 /* Buy now button */
 .buy-button {
-  background: #FF8181;
+  background: #c9222c;
   color: white;
   border: none;
   border-radius: 22px;
-  padding: 8px 16px;
-  margin-top: 15px;
+  padding: 4px 16px;
+  margin-top: 10px;
   font-weight: bold;
   cursor: pointer;
   transition: background 0.2s;
@@ -342,16 +374,16 @@ body {
 }
 
 .buy-button:hover {
-  background: #ff6b6b;
+  background: #c9222c;
 }
 
 /* Message text (no results or Canadian product message) */
 #message, #statusMessage {
   font-style: italic;
   color: #555;
-  margin: 20px 15px;
+  margin: 12px 10px;
   text-align: center;
-  padding: 10px;
+  padding: 6px;
   border-radius: 6px;
   background: #f9f9f9;
 }
@@ -359,7 +391,7 @@ body {
 /* Loading indicator */
 .loading-indicator {
   text-align: center;
-  margin: 20px 0;
+  margin: 12px 0;
 }
 
 .loading-indicator::after {
