@@ -1,0 +1,187 @@
+{
+  "extName": {
+    "message": "Produits de remplacement canadiens"
+  },
+  "extDesc": {
+    "message": "Aide les utilisateurs à trouver des alternatives canadiennes aux produits et à découvrir des entreprises locales."
+  },
+  "tagline": {
+    "message": "Achetez fièrement canadien"
+  },
+  "search_placeholder": {
+    "message": "Rechercher un produit..."
+  },
+  "search_button": {
+    "message": "Rechercher"
+  },
+  "settings_button": {
+    "message": "Paramètres"
+  },
+  "close_button": {
+    "message": "Fermer"
+  },
+  "alternatives_header": {
+    "message": "Alternatives canadiennes"
+  },
+  "suggestions_header": {
+    "message": "Suggestions des utilisateurs"
+  },
+  "origin_label": {
+    "message": "Origine :"
+  },
+  "great_news": {
+    "message": "Bonne nouvelle\u00a0! \"$1\" semble être fabriqué ou vendu au Canada.",
+    "placeholders": {
+      "1": {
+        "content": "$1"
+      }
+    }
+  },
+  "no_product_found": {
+    "message": "Aucun produit trouvé pour \"$1\".",
+    "placeholders": {
+      "1": {
+        "content": "$1"
+      }
+    }
+  },
+  "looks_international": {
+    "message": "Ce produit semble être international. Envisagez ces alternatives canadiennes :"
+  },
+  "no_alternatives_found": {
+    "message": "Aucune alternative canadienne trouvée pour \"$1\".",
+    "placeholders": {
+      "1": {
+        "content": "$1"
+      }
+    }
+  },
+  "searching": {
+    "message": "Recherche des informations sur le produit..."
+  },
+  "buy_link": {
+    "message": "Acheter"
+  },
+  "buy_now": {
+    "message": "Acheter maintenant"
+  },
+  "favorite_title": {
+    "message": "Ajouter aux favoris"
+  },
+  "share_title": {
+    "message": "Partager cette alternative"
+  },
+  "share_text": {
+    "message": "$1 - une alternative canadienne à $2. Voir : $3"
+  },
+  "copied": {
+    "message": "Copié dans le presse-papiers !"
+  },
+  "added_favorites": {
+    "message": "Ajouté aux favoris !"
+  },
+  "scroll_left": {
+    "message": "Défiler à gauche"
+  },
+  "scroll_right": {
+    "message": "Défiler à droite"
+  },
+  "contextMenuTitle": {
+    "message": "Trouver des alternatives canadiennes pour \"%s\""
+  },
+  "notification_title": {
+    "message": "Produits de remplacement canadiens"
+  },
+  "notification_message": {
+    "message": "Vous magasinez en ligne ? N'oubliez pas de vérifier les alternatives canadiennes avec Maple Swap !"
+  },
+  "stats_title": {
+    "message": "Statistiques"
+  },
+  "favorites_title": {
+    "message": "Favoris"
+  },
+  "achievements_title": {
+    "message": "Réalisations"
+  },
+  "settings_title": {
+    "message": "Paramètres"
+  },
+  "high_contrast": {
+    "message": "Activer le mode contraste \u00e9lev\u00e9"
+  },
+  "stats_chosen_label": {
+    "message": "Produits canadiens choisis :"
+  },
+  "stats_co2_label": {
+    "message": "CO2 \u00e9conomis\u00e9 :"
+  },
+  "stats_jobs_label": {
+    "message": "Emplois locaux soutenus :"
+  },
+  "current_badge_label": {
+    "message": "Niveau de badge actuel :"
+  },
+  "badge_none": {
+    "message": "Aucun badge pour le moment. Commencez à choisir des produits canadiens pour en gagner !"
+  },
+  "badge_bronze": {
+    "message": "Bronze 🥉"
+  },
+  "badge_silver": {
+    "message": "Argent 🥈"
+  },
+  "badge_gold": {
+    "message": "Or 🥇"
+  },
+  "badge_patriot": {
+    "message": "Patriote 🇨🇦"
+  },
+  "remove_favorite": {
+    "message": "Retirer \"$1\" des favoris",
+    "placeholders": {
+      "1": {
+        "content": "$1"
+      }
+    }
+  },
+  "onboarding_title": {
+    "message": "Bienvenue dans Maple Swap !"
+  },
+  "onboarding_intro": {
+    "message": "Cette extension vous aide à trouver des alternatives fabriquées au Canada pour vos achats en ligne. En choisissant des produits locaux, vous soutenez les entreprises canadiennes et réduisez votre impact sur l'environnement."
+  },
+  "onboarding_how_title": {
+    "message": "Comment l'utiliser"
+  },
+  "onboarding_how_text": {
+    "message": "Cliquez sur l'ic\u00f4ne de l'extension et recherchez un produit. Si le produit n'est pas canadien, une liste d'alternatives canadiennes s'affichera. Cliquez sur une alternative pour voir plus de d\u00e9tails, l'ajouter aux favoris ou l'acheter."
+  },
+  "onboarding_features_title": {
+    "message": "Fonctionnalit\u00e9s"
+  },
+  "onboarding_feature_favorites": {
+    "message": "Enregistrez vos produits canadiens favoris pour y acc\u00e9der rapidement plus tard."
+  },
+  "onboarding_feature_share": {
+    "message": "Partagez facilement les informations sur les alternatives avec vos amis."
+  },
+  "onboarding_feature_stats": {
+    "message": "Consultez vos statistiques et r\u00e9compenses dans le tableau de bord (nombre de produits pass\u00e9s au canadien, CO2 \u00e9conomis\u00e9, emplois soutenus)."
+  },
+  "onboarding_feature_accessibility": {
+    "message": "Activez le mode contraste \u00e9lev\u00e9 pour une meilleure accessibilit\u00e9, et utilisez l'extension en anglais ou en fran\u00e7ais."
+  },
+  "onboarding_thanks": {
+    "message": "Merci de soutenir l'\u00e9conomie locale !"
+  },
+  "fact_dairy": {
+    "message": "Les producteurs laitiers canadiens respectent des normes \u00e9lev\u00e9es et soutiennent des milliers de fermes locales."
+  },
+  "fact_beverage": {
+    "message": "De nombreuses entreprises de boissons canadiennes sont ind\u00e9pendantes. Les choisir soutient les entreprises locales et les emplois."
+  },
+  "fact_default": {
+    "message": "Choisir des alternatives canadiennes contribue \u00e0 soutenir les communaut\u00e9s locales et \u00e0 r\u00e9duire l'impact sur l'environnement."
+  }
+}

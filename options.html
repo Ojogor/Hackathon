@@ -1,14 +1,64 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <title>Extension Settings</title>
-  <style>
-    body { font-family: Arial, sans-serif; margin: 10px; }
-  </style>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Maple Swap: Your Impact Dashboard</title>
+  <link rel="stylesheet" href="popup.css" />
+  <link rel="stylesheet" href="options.css" />
 </head>
 <body>
-  <h1>Settings</h1>
-  <p>No settings available yet. Future configuration options will appear here.</p>
+  <div class="dashboard">
+    <h1>Maple Swap: Your Impact Dashboard</h1>
+
+    <!-- Medals Section -->
+    <section class="medals-section">
+      <h2>Your Medals</h2>
+      <div class="medals-container">
+        <!-- Medals will be dynamically inserted here -->
+      </div>
+    </section>
+
+    <!-- Impact Statistics Section -->
+    <section class="impact-section">
+      <h2>Your Impact</h2>
+
+      <!-- Filter -->
+      <div style="margin-bottom: 10px; padding-left: 10px;">
+        <label for="impact-period">View by: </label>
+        <select id="impact-period">
+          <option value="weekly">Weekly</option>
+          <option value="monthly" selected>Monthly</option>
+          <option value="yearly">Yearly</option>
+        </select>
+      </div>
+
+      <div class="impact-stats">
+        <div class="impact-card">
+          <h3>Carbon Emissions Saved</h3>
+          <p id="carbon-saved">0 metric tons CO₂</p>
+        </div>
+        <div class="impact-card">
+          <h3>Jobs Supported</h3>
+          <p id="jobs-supported">0</p>
+        </div>
+      </div>
+
+      <!-- Chart container for Highcharts -->
+      <div id="impactChart" style="height: 300px; width: 90%; margin: 20px auto;"></div>
+    </section>
+
+    <!-- Product Stories Section -->
+    <section class="stories-section">
+      <h2>Learn More About Your Products</h2>
+      <div class="stories-container">
+        <!-- Story cards will be dynamically inserted here -->
+      </div>
+      <button class="read-more-btn">Read More Stories</button>
+    </section>
+  </div>
+
+  <script src="https://code.highcharts.com/highcharts.js"></script>
+  <script src="options.js"></script>
 </body>
 </html>

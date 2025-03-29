@@ -1,19 +1,23 @@
 {
   "manifest_version": 3,
-  "name": "Canadian Product Alternatives",
-  "description": "Helps users find Canadian alternatives for products and learn about local businesses.",
-  "version": "1.0",
+  "name": "__MSG_extName__",
+  "description": "__MSG_extDesc__",
+  "version": "2.0",
+  "default_locale": "en",
   "permissions": [
     "contextMenus",
     "activeTab",
     "scripting",
-    "storage"
+    "storage",
+    "tabs",
+    "notifications"
   ],
   "host_permissions": [
     "https://world.openfoodfacts.org/*"
   ],
   "icons": {
     "16": "icon16.png",
+    "32": "icon32.png",
     "48": "icon48.png",
     "128": "icon128.png"
   },
