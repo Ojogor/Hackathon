@@ -191,6 +191,8 @@ async function setDomFromProduct(product) {
   $("productImage").alt = product.name;
   resultsSection.style.display = "block";
 
+  $("alternativeInfo").style.display = "none";
+  $("alternativesContainer").style.display = "none";
   // Determine if the product is Canadian (origin includes Canada)
   const originTags = Array.isArray(product.origin) ? product.origin.map(x => x.toLowerCase()) 
                                                   : [String(product.origin).toLowerCase()];
@@ -210,6 +212,7 @@ async function setDomFromProduct(product) {
   }
 
   // Fetch alternatives in the same category
+  console.log(product.categoryTag + " "+ product.name);
   const alternatives = await fetchAlternatives(product.categoryTag);
   if (!alternatives || alternatives.length === 0) {
     // No alternatives found for this category
@@ -219,7 +222,7 @@ async function setDomFromProduct(product) {
     statusMsg.style.display = "block";
     return;
   }
-
+  $('altList').innerHTML='';  // Clear previous alternatives
   // Show alternatives list
   $("alternativesContainer").style.display = "block";
   let firstCard = null;
@@ -234,6 +237,7 @@ async function setDomFromProduct(product) {
     // Product name text
     const nameP = document.createElement("p");
     nameP.textContent = alt.name;
+    console.log(alt.name);
     // Buy link (search on Walmart for this product)
     const buyLink = document.createElement("a");
     buyLink.href = `https://www.walmart.ca/search?q=${encodeURIComponent(alt.name)}`;
