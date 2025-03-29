@@ -1,21 +1,67 @@
 /* General popup styles */
 body {
-    font-family: Arial, sans-serif;
-    width: 360px;
-    padding: 8px;
-    background: #f9f9f9;
-    color: #000;
-  }
+  font-family: Arial, sans-serif;
+  /* width: 360px; */
+  padding: 8px;
+  /* background: #f9f9f9; */
+  color: #000;
+  position: relative;
+  width: 401px;
+  height: 511px;
+  background: #FBF7F7;
+  border-radius: 21px 21px 21px 21px;
+  box-shadow: 4px 4px 4px 0px rgba(0, 0, 0, 0.2);
+  overflow: hidden;
+  z-index: 0;
+}
+.head_element{
+  height: 50px;
+  background-color: #0077cc;
+  color: white;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1.5em;
+  font-weight: bold;
+  margin: 10px;
+  z-index: 10;
+}
+h1#Logo_Name {
+  font-size: 22px;
+  font-family: 'sourcesanspro';
+  font-style: italic;
+  font-weight: 400;
+  color: #FF8181;
+}
+p#tagline {
+  font-size: 8px;
+  font-weight: bold;
+}
+div#head_image {
+  justify-items: center;
+}
+img#maple_leaf {
+  height: 2rem;
+}
+div#head_element {
+  display: flex;
+  justify-content: space-around;;
+}
   /* Top bar (search input and buttons) */
   #top-bar {
     display: flex;
     align-items: center;
-    gap: 5px;
+    gap: 10px;
+    border-radius: 22px;
+    width: 100%;
+    margin-top: 2rem;
   }
   #top-bar input {
     flex: 1;
     padding: 4px;
     font-size: 0.9em;
+    border: 1px solid #ccc;
+    border-radius: 22px;
   }
   #top-bar button {
     cursor: pointer;
@@ -33,7 +79,8 @@ body {
     display: flex;
     align-items: center;
     margin-top: 10px;
-  }
+    flex-direction: column;
+}
   #productInfo img {
     width: 80px;
     height: 80px;
