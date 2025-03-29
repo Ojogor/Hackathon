@@ -1,365 +1,356 @@
-// Data for demonstration: product info, Canadian alternatives, and user suggestions.
-// In a real extension, this data would come from an API or database query.
-const productData = {
-    "Big Milk": {
-      origin: "USA",
-      image: "https://via.placeholder.com/100?text=Prod",  // Placeholder product image
-      category: "dairy",
-      alternatives: [
-        {
-          name: "Maple Dairy Co. 2% Milk",
-          image: "https://via.placeholder.com/80?text=Maple",
-          origin: "Canada",
-          location: "Sudbury, Ontario",
-          story: "A family-run dairy farm operating for over 50 years, providing fresh milk to the local community.",
-          metrics: {
-            jobs: 50,
-            emissions: "15% lower carbon footprint"
-          }
-        },
-        {
-          name: "Cowtown Organic Milk",
-          image: "https://via.placeholder.com/80?text=Cow",
-          origin: "Canada",
-          location: "Calgary, Alberta",
-          story: "A cooperative of farmers known for high-quality organic dairy products.",
-          metrics: {
-            jobs: 20,
-            emissions: "10% lower carbon emissions"
-          }
-        }
-      ],
-      suggestions: [
-        {
-          name: "Community Dairy Milk",
-          image: "https://via.placeholder.com/80?text=User",
-          origin: "Canada",
-          location: "Toronto, Ontario",
-          story: "",  // No story provided for user suggestion
-          metrics: {
-            jobs: 5,
-            emissions: "N/A"
-          }
-        }
-      ]
-    },
-    "Big Cola": {
-      origin: "USA",
-      image: "https://via.placeholder.com/100?text=Prod",
-      category: "beverage",
-      alternatives: [
-        {
-          name: "Maple Cola",
-          image: "https://via.placeholder.com/80?text=Cola",
-          origin: "Canada",
-          location: "Montreal, Quebec",
-          story: "A Canadian-owned soda company that makes cola sweetened with maple syrup.",
-          metrics: {
-            jobs: 30,
-            emissions: "5% lower CO2 emissions"
-          }
-        }
-      ],
-      suggestions: []
-    },
-    "Pure Maple Syrup": {
-      origin: "Canada",
-      image: "https://via.placeholder.com/100?text=Prod",
-      category: "food",
-      alternatives: [],
-      suggestions: []
-    }
-  };
-  
-  // Facts for each category to highlight benefits of choosing Canadian alternatives.
-  const categoryFacts = {
-    dairy: "Canadian dairy farmers adhere to high standards and a supply management system that supports thousands of local farms.",
-    beverage: "Many Canadian beverage companies are independently owned. Choosing them supports local businesses and jobs.",
-    default: "Choosing Canadian alternatives helps support local communities and reduce environmental impact."
-  };
-  
-  // Helper to get DOM element by ID.
-  function $(id) {
-    return document.getElementById(id);
-  }
-  
-  // Display details of the selected Canadian alternative in the info section.
-  function displayAlternativeDetails(altData, productCategory) {
-    // Set alternative name
-    $("alternativeName").textContent = altData.name;
-    // Set or hide the story/description
-    const storyElem = $("alternativeStory");
-    if (altData.story && altData.story.length > 0) {
-      storyElem.textContent = altData.story;
-      storyElem.style.display = "block";
-    } else {
-      storyElem.textContent = "";
-      storyElem.style.display = "none";
-    }
-    // Set impact metrics (supports jobs, emissions reduction, etc.)
-    const metricsList = $("alternativeMetrics");
-    metricsList.innerHTML = "";  // clear previous metrics
-    if (altData.metrics) {
-      if (altData.metrics.jobs && altData.metrics.jobs !== "N/A") {
-        const li = document.createElement("li");
-        li.textContent = `Supports ${altData.metrics.jobs} local jobs`;
-        metricsList.appendChild(li);
-      }
-      if (altData.metrics.emissions && altData.metrics.emissions !== "N/A") {
-        const li = document.createElement("li");
-        // If emissions is given as a descriptive string, use it directly; otherwise format it.
-        li.textContent = typeof altData.metrics.emissions === "string" 
-          ? altData.metrics.emissions 
-          : `Reduces emissions by ${altData.metrics.emissions}`;
-        metricsList.appendChild(li);
-      }
-    }
-    // Show or hide the metrics list depending on content
-    metricsList.style.display = (metricsList.childElementCount > 0) ? "block" : "none";
-    // Set the category fact (if available for this category, otherwise use default message)
-    const factElem = $("categoryFact");
-    const factText = categoryFacts[productCategory] || categoryFacts.default;
-    factElem.textContent = factText;
-  }
-  
-  // Highlight the selected card visually and remove highlight from others.
-  function highlightSelectedCard(cardElement) {
-    const prevSelected = document.querySelector(".card.selected");
-    if (prevSelected) prevSelected.classList.remove("selected");
-    cardElement.classList.add("selected");
-  }
-  async function fetchFromOpenFoodFacts(query) {
-    const url = `https://world.openfoodfacts.org/cgi/search.pl?search_terms=${encodeURIComponent(query)}&search_simple=1&action=process&json=1`;
-  
-    try {
-      const response = await fetch(url);
-      const data = await response.json();
-  
-      if (data.products && data.products.length > 0) {
-        const product = data.products[0];
-        return {
-          name: product.product_name || query,
-          origin: product.countries_tags || [],
-          brand: product.brands || "Unknown",
-          image: product.image_url || "https://via.placeholder.com/100?text=No+Image"
-        };
-      }
-    } catch (err) {
-      console.error("API Error:", err);
-    }
-    return null;
-  }
-  
-  
-  // Perform a search for the given product query and update the popup UI.
-  async function performSearch(query) {
-    const resultsSection = $("resultSection");
-    const messageBox = $("message");
-    const statusMsg = $("statusMessage");
-    const searchQuery = query.trim();
-    if (!searchQuery) return;  // do nothing if query is empty
-  
-    // Case-insensitive match for the product name in our data.
-    const queryLower = searchQuery.toLowerCase();
-    let productKey = null;
-    for (let name in productData) {
-      if (name.toLowerCase() === queryLower) {
-        productKey = name;
-        break;
-      }
-    }
-  
-    if (!productKey) {
-      // Try partial match if exact not found.
-      for (let name in productData) {
-        if (name.toLowerCase().includes(queryLower) || queryLower.includes(name.toLowerCase())) {
-          productKey = name;
-          break;
-        }
-      }
-    }
-  
-    // ✅ ✅ ✅ Fallback to Open Food Facts API
-    if (!productKey) {
-      const apiProduct = await fetchFromOpenFoodFacts(searchQuery);
-  
-      if (!apiProduct) {
-        resultsSection.style.display = "none";
-        statusMsg.style.display = "none";
-        messageBox.textContent = `No product found for "${searchQuery}".`;
-        messageBox.style.display = "block";
-        return;
-      }
-  
-      const isCanadian = apiProduct.origin.includes("en:canada");
-  
-      $("productName").textContent = apiProduct.name;
-      $("productOrigin").textContent = `Origin: ${apiProduct.origin.join(", ").replace(/en:/g, '')}`;
-      $("productImage").src = apiProduct.image;
-      $("productImage").alt = apiProduct.name;
-  
-      resultsSection.style.display = "block";
-      messageBox.style.display = "none";
-      $("alternativeInfo").style.display = "none";
-      $("alternativesContainer").style.display = "none";
-      $("suggestionsContainer").style.display = "none";
-  
-      if (isCanadian) {
-        statusMsg.textContent = `Great news! "${apiProduct.name}" appears to be made or sold in Canada.`;
-      } else {
-        statusMsg.textContent = `This product appears to be international. Please consider a Canadian alternative.`;
-      }
-  
-      statusMsg.style.display = "block";
-      return;
-    }
+// Utility to get element by ID
+function $(id) {
+  return document.getElementById(id);
+}
 
-    const product = productData[productKey];
-    $("productName").textContent = productKey;
-    $("productOrigin").textContent = `Origin: ${product.origin}`;
-    const prodImgElem = $("productImage");
-    prodImgElem.src = product.image;
-    prodImgElem.alt = productKey;
-  
-    messageBox.style.display = "none";
-    resultsSection.style.display = "block";
-  
-    if (product.origin.toLowerCase() === "canada") {
-      $("alternativesContainer").style.display = "none";
-      $("suggestionsContainer").style.display = "none";
-      $("alternativeInfo").style.display = "none";
-      statusMsg.textContent = `Great news! "${productKey}" is made in Canada.`;
-      statusMsg.style.display = "block";
-      return;
+// Capitalize country tags (e.g., ["en:canada"] -> "Canada")
+function capitalizeCountries(input) {
+  if (!input) return "";
+  if (Array.isArray(input)) {
+    return input
+      .map(c => c.replace(/^[a-z]+:/i, "").trim())
+      .map(c => c.charAt(0).toUpperCase() + c.slice(1).toLowerCase())
+      .join(", ");
+  }
+  // if input is a string of comma-separated countries
+  return input
+    .split(",")
+    .map(c => c.replace(/^[a-z]+:/i, "").trim())
+    .map(c => c.charAt(0).toUpperCase() + c.slice(1).toLowerCase())
+    .join(", ");
+}
+
+// Some informative facts for certain categories (used in details view)
+const categoryFacts = {
+  dairy: "Canadian dairy farmers adhere to high standards and support thousands of local farms.",
+  beverage: "Many Canadian beverage companies are independently owned. Choosing them supports local businesses and jobs.",
+  default: "Choosing Canadian alternatives helps support local communities and reduce environmental impact."
+};
+
+// Highlight the selected card visually, unhighlight others
+function highlightSelectedCard(cardElement) {
+  const prevSelected = document.querySelector(".card.selected");
+  if (prevSelected) prevSelected.classList.remove("selected");
+  cardElement.classList.add("selected");
+}
+
+// Display details of a selected Canadian alternative
+function displayAlternativeDetails(altData, productCategory) {
+  // Set alternative name
+  $("alternativeName").textContent = altData.name;
+  // Show location (or story if provided)
+  const storyElem = $("alternativeStory");
+  if (altData.story && altData.story.length > 0) {
+    storyElem.textContent = altData.story;
+    storyElem.style.display = "block";
+  } else if (altData.location) {
+    storyElem.textContent = `Location: ${altData.location}`;
+    storyElem.style.display = "block";
+  } else {
+    storyElem.textContent = "";
+    storyElem.style.display = "none";
+  }
+  // Set metrics (jobs supported, CO2 savings)
+  const metricsList = $("alternativeMetrics");
+  metricsList.innerHTML = "";
+  if (altData.metrics) {
+    if (altData.metrics.jobs && altData.metrics.jobs !== "N/A") {
+      const liJobs = document.createElement("li");
+      liJobs.textContent = `Supports ${altData.metrics.jobs} local jobs`;
+      metricsList.appendChild(liJobs);
     }
-  
-    // Show alternatives
+    if (altData.metrics.emissions && altData.metrics.emissions !== "N/A") {
+      const liEm = document.createElement("li");
+      liEm.textContent = (typeof altData.metrics.emissions === "string")
+        ? altData.metrics.emissions 
+        : `Reduces emissions by ${altData.metrics.emissions}`;
+      metricsList.appendChild(liEm);
+    }
+  }
+  // Show or hide the metrics list
+  metricsList.style.display = (metricsList.childElementCount > 0) ? "block" : "none";
+  // Set a category fact (if available) to highlight benefits
+  const factElem = $("categoryFact");
+  const catKey = productCategory ? productCategory.toLowerCase() : "";
+  let factText = categoryFacts.default;
+  if (catKey.includes("dairy")) {
+    factText = categoryFacts.dairy;
+  } else if (catKey.includes("beverage")) {
+    factText = categoryFacts.beverage;
+  }
+  factElem.textContent = factText;
+}
+
+// Fetch product data from Open Food Facts for a given query (product name)
+async function fetchFromOpenFoodFacts(query) {
+  const url = `https://world.openfoodfacts.org/cgi/search.pl?search_terms=${encodeURIComponent(query)}&search_simple=1&action=process&json=1`;
+  try {
+    const response = await fetch(url);
+    if (!response.ok) throw new Error(`HTTP ${response.status}`);
+    const data = await response.json();
+    if (data.products && data.products.length > 0) {
+      const product = data.products[0];  // take first matching product
+      // Determine a category tag for the product (used to find alternatives)
+      let categoryTag = "";
+      if (product.categories_tags && product.categories_tags.length > 0) {
+        categoryTag = product.categories_tags[0];
+        // Remove language prefix like "en:" if present
+        if (categoryTag.indexOf(":") !== -1) {
+          categoryTag = categoryTag.split(":").pop();
+        }
+      }
+      return {
+        name: product.product_name || query,
+        origin: product.countries_tags || [],
+        image: product.image_front_small_url 
+               || product.image_front_url 
+               || product.image_url 
+               || "https://via.placeholder.com/100?text=No+Image",
+        categoryTag: categoryTag
+      };
+    }
+  } catch (err) {
+    console.error("OpenFoodFacts API Error:", err);
+  }
+  return null;
+}
+
+// Helper for random integer in [min, max]
+function randomInt(min, max) {
+  return Math.floor(Math.random() * (max - min + 1)) + min;
+}
+// Random Canadian city for demo purposes
+const canadianCities = [
+  "Toronto, Ontario", "Montreal, Quebec", "Vancouver, British Columbia",
+  "Calgary, Alberta", "Edmonton, Alberta", "Winnipeg, Manitoba",
+  "Ottawa, Ontario", "Halifax, Nova Scotia", "Saskatoon, Saskatchewan",
+  "Quebec City, Quebec", "Regina, Saskatchewan", "St. John's, Newfoundland"
+];
+function randomCity() {
+  return canadianCities[Math.floor(Math.random() * canadianCities.length)];
+}
+
+// Fetch Canadian alternatives in the same category, sorted by popularity
+async function fetchAlternatives(categoryTag) {
+  if (!categoryTag) return [];
+  const url = `https://world.openfoodfacts.org/cgi/search.pl?action=process&search_simple=1&json=1` +
+              `&tagtype_0=categories&tag_contains_0=contains&tag_0=${encodeURIComponent(categoryTag)}` +
+              `&tagtype_1=countries&tag_contains_1=contains&tag_1=Canada` +
+              `&sort_by=unique_scans_n&page_size=10`;
+  try {
+    const resp = await fetch(url);
+    if (!resp.ok) throw new Error(`HTTP ${resp.status}`);
+    const data = await resp.json();
+    if (data.products) {
+      // Map the products to our simplified alternative object list
+      return data.products
+        .filter(p => p.product_name)  // only include if name exists
+        .map(p => {
+          return {
+            name: p.product_name,
+            image: p.image_front_small_url 
+                   || p.image_front_url 
+                   || p.image_url 
+                   || "https://via.placeholder.com/80?text=No+Image",
+            origin: p.countries_tags || [],
+            location: randomCity(),
+            metrics: {
+              jobs: randomInt(10, 50),
+              emissions: `${randomInt(5, 30)}% lower CO2 emissions`
+            },
+            story: ""  // placeholder (could be filled with additional info if available)
+          };
+        });
+    }
+  } catch (err) {
+    console.error("Error fetching alternatives:", err);
+  }
+  return [];
+}
+
+// Perform the search and update the UI
+async function performSearch(query) {
+  const resultsSection = $("resultSection");
+  const messageBox = $("message");
+  const statusMsg = $("statusMessage");
+  const searchQuery = query.trim();
+  if (!searchQuery) return;
+
+  // Show a loading status
+  resultsSection.style.display = "none";
+  messageBox.style.display = "none";
+  statusMsg.textContent = "Searching for product information...";
+  statusMsg.style.display = "block";
+
+  // Fetch product info from Open Food Facts
+  const product = await fetchFromOpenFoodFacts(searchQuery);
+  if (!product) {
+    // No product found
     statusMsg.style.display = "none";
-    $("alternativeInfo").style.display = "block";
-    const altContainer = $("alternativesContainer");
-    const sugContainer = $("suggestionsContainer");
-  
-    $("altList").innerHTML = "";
-    $("suggestionList").innerHTML = "";
-    altContainer.style.display = "block";
-    sugContainer.style.display = "block";
-  
-    let firstCard = null;
-    product.alternatives.forEach((alt, index) => {
-      const card = document.createElement("div");
-      card.className = "card";
-      const img = document.createElement("img");
-      img.src = alt.image;
-      img.alt = alt.name;
-      const nameP = document.createElement("p");
-      nameP.textContent = alt.name;
-      card.appendChild(img);
-      card.appendChild(nameP);
-      card.addEventListener("click", () => {
-        highlightSelectedCard(card);
-        displayAlternativeDetails(alt, product.category);
-      });
-      $("altList").appendChild(card);
-      if (index === 0) {
-        firstCard = card;
-      }
-    });
-  
-    product.suggestions.forEach((alt, index) => {
-      const card = document.createElement("div");
-      card.className = "card";
-      const img = document.createElement("img");
-      img.src = alt.image;
-      img.alt = alt.name;
-      const nameP = document.createElement("p");
-      nameP.textContent = alt.name;
-      card.appendChild(img);
-      card.appendChild(nameP);
-      card.addEventListener("click", () => {
-        highlightSelectedCard(card);
-        displayAlternativeDetails(alt, product.category);
-      });
-      $("suggestionList").appendChild(card);
-      if (!firstCard && index === 0) {
-        firstCard = card;
-      }
-    });
-  
-    if (product.alternatives.length === 0) {
-      altContainer.style.display = "none";
-    }
-    if (product.suggestions.length === 0) {
-      sugContainer.style.display = "none";
-    }
-    if (product.alternatives.length === 0 && product.suggestions.length === 0) {
-      $("alternativeInfo").style.display = "none";
-      statusMsg.textContent = `No Canadian alternatives found for "${productKey}".`;
-      statusMsg.style.display = "block";
-      return;
-    }
-  
-    if (firstCard) {
-      firstCard.click();
-    }
+    resultsSection.style.display = "none";
+    messageBox.textContent = `No product found for "${searchQuery}".`;
+    messageBox.style.display = "block";
+    return;
   }
-  
-  // Try to use any highlighted text from the active tab as the search query.
-  function getHighlightedTextAndSearch() {
-    chrome.tabs.query({ active: true, currentWindow: true }, (tabs) => {
-      if (!tabs || !tabs[0]) return;
-      chrome.scripting.executeScript(
-        {
-          target: { tabId: tabs[0].id },
-          func: () => window.getSelection().toString()
-        },
-        (results) => {
-          if (chrome.runtime.lastError) {
-            // Cannot inject into this page (e.g. Chrome Web Store or restricted page)
-            return;
-          }
-          const selectionText = results && results[0] && results[0].result;
-          if (selectionText) {
-            $("searchInput").value = selectionText;
-            performSearch(selectionText);
-          }
-        }
-      );
-    });
+
+  // Update UI with the found product's info
+  $("productName").textContent = product.name;
+  $("productOrigin").textContent = `Origin: ${capitalizeCountries(product.origin)}`;
+  $("productImage").src = product.image;
+  $("productImage").alt = product.name;
+  resultsSection.style.display = "block";
+
+  // Determine if the product is Canadian (origin includes Canada)
+  const originTags = Array.isArray(product.origin) ? product.origin.map(x => x.toLowerCase()) 
+                                                  : [String(product.origin).toLowerCase()];
+  const isCanadian = originTags.some(tag => tag.includes("canada"));
+
+  // Hide previous alternative details and lists (if any)
+  $("alternativeInfo").style.display = "none";
+  $("altList").innerHTML = "";
+  $("suggestionList").innerHTML = "";
+  $("alternativesContainer").style.display = "none";
+  $("suggestionsContainer").style.display = "none";
+
+  if (isCanadian) {
+    // The product is already Canadian
+    statusMsg.textContent = `Great news! "${product.name}" appears to be made or sold in Canada.`;
+    statusMsg.style.display = "block";
+    // No need to show alternatives in this case
+    return;
+  } else {
+    // Product is not Canadian – find Canadian alternatives
+    statusMsg.textContent = `This product looks international. Consider these Canadian alternatives:`;
+    statusMsg.style.display = "block";
   }
-  
-  // Initialize event listeners after DOM is loaded
-  document.addEventListener("DOMContentLoaded", () => {
-    // Search when "Enter" key is pressed in the input
-    $("searchInput").addEventListener("keydown", (e) => {
-      if (e.key === "Enter") {
-        performSearch(e.target.value);
-      }
+
+  // Fetch alternatives in the same category
+  const alternatives = await fetchAlternatives(product.categoryTag);
+  if (!alternatives || alternatives.length === 0) {
+    // No alternatives found for this category
+    $("alternativeInfo").style.display = "none";
+    $("alternativesContainer").style.display = "none";
+    statusMsg.textContent = `No Canadian alternatives found for "${product.name}".`;
+    statusMsg.style.display = "block";
+    return;
+  }
+
+  // Show alternatives list
+  $("alternativesContainer").style.display = "block";
+  let firstCard = null;
+  alternatives.forEach((alt, index) => {
+    // Create card element
+    const card = document.createElement("div");
+    card.className = "card";
+    // Product image
+    const img = document.createElement("img");
+    img.src = alt.image;
+    img.alt = alt.name;
+    // Product name text
+    const nameP = document.createElement("p");
+    nameP.textContent = alt.name;
+    // Buy link (search on Walmart for this product)
+    const buyLink = document.createElement("a");
+    buyLink.href = `https://www.walmart.ca/search?q=${encodeURIComponent(alt.name)}`;
+    buyLink.target = "_blank";
+    buyLink.textContent = "Buy";
+    buyLink.className = "buy-link";
+    // Prevent card click when clicking the buy link
+    buyLink.addEventListener("click", (e) => e.stopPropagation());
+    // Assemble card
+    card.appendChild(img);
+    card.appendChild(nameP);
+    card.appendChild(buyLink);
+    // Card click to show details
+    card.addEventListener("click", () => {
+      highlightSelectedCard(card);
+      displayAlternativeDetails(alt, product.categoryTag);
+      $("alternativeInfo").style.display = "block";
     });
-    // Search when clicking the search button
-    $("searchBtn").addEventListener("click", () => {
-      performSearch($("searchInput").value);
-    });
-    // Open the settings/options page when clicking the gear icon
-    $("settingsBtn").addEventListener("click", () => {
-      chrome.runtime.openOptionsPage();
-    });
-  
-    
-    const params = new URLSearchParams(window.location.search);
-    const queryParam = params.get("query");
-    if (queryParam) {
-      $("searchInput").value = queryParam;
-      performSearch(queryParam);
-    } else {
-      chrome.storage.local.get(["searchQuery", "trigger"], (data) => {
-        if (data.trigger === "contextMenu" && data.searchQuery) {
-          $("searchInput").value = data.searchQuery;
-          performSearch(data.searchQuery);
-          chrome.storage.local.remove(["searchQuery", "trigger"]);
-        } else {
-          getHighlightedTextAndSearch();
+    $("altList").appendChild(card);
+    if (index === 0) firstCard = card;
+  });
+
+  // Enable horizontal scrolling with arrows
+  const altListEl = $("altList");
+  const scrollLeftBtn = document.querySelector(".scroll-btn.left");
+  const scrollRightBtn = document.querySelector(".scroll-btn.right");
+  scrollLeftBtn.addEventListener("click", () => {
+    altListEl.scrollBy({ left: -100, behavior: "smooth" });
+  });
+  scrollRightBtn.addEventListener("click", () => {
+    altListEl.scrollBy({ left: 100, behavior: "smooth" });
+  });
+  // Show or hide arrows based on overflow
+  if (altListEl.scrollWidth <= altListEl.clientWidth) {
+    scrollLeftBtn.style.display = "none";
+    scrollRightBtn.style.display = "none";
+  } else {
+    scrollLeftBtn.style.display = "block";
+    scrollRightBtn.style.display = "block";
+  }
+
+  // Auto-select the first alternative to display details by default
+  if (firstCard) {
+    firstCard.click();
+  }
+}
+
+// Attempt to use any highlighted text on the page as the search query
+function getHighlightedTextAndSearch() {
+  chrome.tabs.query({ active: true, currentWindow: true }, (tabs) => {
+    if (!tabs || !tabs.length) return;
+    const tabId = tabs[0].id;
+    chrome.scripting.executeScript(
+      {
+        target: { tabId: tabId },
+        func: () => window.getSelection().toString()
+      },
+      (results) => {
+        if (chrome.runtime.lastError || !results || !results[0]) {
+          // No selection or permission issue
+          return;
         }
-      });
+        const selectionText = results[0].result?.trim();
+        if (selectionText) {
+          $("searchInput").value = selectionText;
+          performSearch(selectionText);
+        }
+      }
+    );
+  });
+}
+
+// Initialize event listeners after the popup DOM is loaded
+document.addEventListener("DOMContentLoaded", () => {
+  $("searchInput").addEventListener("keydown", (e) => {
+    if (e.key === "Enter") {
+      performSearch(e.target.value);
     }
   });
-  
+  $("searchBtn").addEventListener("click", () => {
+    performSearch($("searchInput").value);
+  });
+  $("settingsBtn").addEventListener("click", () => {
+    chrome.runtime.openOptionsPage();
+  });
+
+  // Check if a query was passed via context menu or URL
+  const params = new URLSearchParams(window.location.search);
+  const queryParam = params.get("query");
+  if (queryParam) {
+    $("searchInput").value = queryParam;
+    performSearch(queryParam);
+  } else {
+    chrome.storage.local.get(["searchQuery", "trigger"], (data) => {
+      if (data.trigger === "contextMenu" && data.searchQuery) {
+        $("searchInput").value = data.searchQuery;
+        performSearch(data.searchQuery);
+        chrome.storage.local.remove(["searchQuery", "trigger"]);
+      } else {
+        // If no preset query, attempt to use highlighted text from the page
+        getHighlightedTextAndSearch();
+      }
+    });
+  }
+});

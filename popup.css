@@ -1,173 +1,375 @@
-/* General popup styles */
 body {
-  font-family: Arial, sans-serif;
-  /* width: 360px; */
-  padding: 8px;
-  /* background: #f9f9f9; */
-  color: #000;
-  position: relative;
+  font-family: 'Arial', 'Helvetica', sans-serif;
   width: 401px;
   height: 511px;
   background: #FBF7F7;
-  border-radius: 21px 21px 21px 21px;
-  box-shadow: 4px 4px 4px 0px rgba(0, 0, 0, 0.2);
+  border-radius: 21px;
+  color: #000;
+  position: relative;
   overflow: hidden;
-  z-index: 0;
+  margin: 0;
+  padding: 0;
 }
-.head_element{
-  height: 50px;
-  background-color: #0077cc;
+
+/* Header section */
+#head_element {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 15px 20px;
+  background-color: #FBF7F7;
+  margin-bottom: 5px;
+}
+
+#Logo_Name {
+  font-size: 22px;
+  font-family: 'Arial', 'Helvetica', sans-serif;
+  font-style: italic;
+  font-weight: 600;
+  color: #FF8181;
+  margin: 0;
+}
+
+#tagline {
+  font-size: 8px;
+  font-weight: bold;
+  margin: 0;
+  color: #555;
+}
+
+#head_image {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+#maple_leaf {
+  height: 2rem;
+}
+
+/* Top bar (search input and buttons) */
+#top-bar {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  width: 90%;
+  margin: 2rem auto 1rem;
+  position: relative;
+}
+
+#top-bar input {
+  flex: 1;
+  padding: 8px 15px;
+  font-family: 'Arial', 'Helvetica', sans-serif;
+  font-size: 0.9em;
+  border: 1px solid #ccc;
+  border-radius: 22px;
+  box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+}
+
+#top-bar input::placeholder {
+  font-weight: bold;
+  opacity: 0.6;
+  color: #FF8181;
+}
+
+#searchBtn {
+  background: none;
+  border: none;
+  font-size: 1.2em;
+  padding: 0 4px;
+  cursor: pointer;
+  color: #555;
+}
+
+#settingsBtn {
+  background: none;
+  border: none;
+  font-size: 1.2em;
+  padding: 0 4px;
+  cursor: pointer;
+  color: #555;
+}
+
+#searchBtn:hover, #settingsBtn:hover {
+  color: #FF8181;
+}
+
+/* Product info section */
+#productInfo {
+  display: flex;
+  align-items: center;
+  margin: 15px auto;
+  flex-direction: column;
+  padding: 0 15px;
+}
+
+#productInfo img {
+  width: 90px;
+  height: 90px;
+  object-fit: cover;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+  margin: 10px;
+  border-radius: 8px;
+}
+
+#productDetails {
+  text-align: center;
+}
+
+#productDetails h2 {
+  font-size: 1.1em;
+  margin: 5px 0;
+  color: #333;
+}
+
+#productOrigin {
+  text-align: center;
+  font-style: italic;
+  color: #666;
+  margin: 5px 0 15px;
+}
+
+#statusMessage {
+  background: #e6f7e6;
+  color: #2e7d32;
+  padding: 8px 12px;
+  border-radius: 4px;
+  text-align: center;
+  margin: 10px 15px;
+  font-weight: bold;
+}
+
+/* Alternatives section */
+#alternativesContainer, #suggestionsContainer {
+  margin: 15px 0;
+  position: relative;
+  padding: 0 15px;
+}
+
+#alternativesContainer h3, #suggestionsContainer h3 {
+  font-size: 1em;
+  margin: 5px 0;
+  color: #333;
+  padding-left: 5px;
+  border-left: 3px solid #FF8181;
+}
+
+/* Scroll controls */
+.scroll-controls {
+  display: flex;
+  justify-content: space-between;
+  position: absolute;
+  width: 100%;
+  top: 50%;
+  left: 0;
+  transform: translateY(-50%);
+  pointer-events: none;
+  padding: 0 5px;
+  box-sizing: border-box;
+  z-index: 10;
+}
+
+.scroll-btn {
+  background: rgba(255, 129, 129, 0.8);
   color: white;
+  border: none;
+  border-radius: 50%;
+  width: 24px;
+  height: 24px;
   display: flex;
   align-items: center;
   justify-content: center;
-  font-size: 1.5em;
-  font-weight: bold;
-  margin: 10px;
-  z-index: 10;
+  cursor: pointer;
+  pointer-events: auto;
+  box-shadow: 0 2px 4px rgba(0,0,0,0.2);
 }
-h1#Logo_Name {
-  font-size: 22px;
-  font-family: 'sourcesanspro';
-  font-style: italic;
-  font-weight: 400;
+
+.scroll-btn:hover {
+  background: rgba(255, 129, 129, 1);
+}
+
+/* Card list (alternatives and suggestions) */
+.card-list {
+  display: flex;
+  gap: 10px;
+  overflow-x: auto;
+  padding: 10px 5px;
+  scroll-behavior: smooth;
+  -ms-overflow-style: none;  /* Hide scrollbar in IE and Edge */
+  scrollbar-width: none;  /* Hide scrollbar in Firefox */
+}
+
+.card-list::-webkit-scrollbar {
+  display: none; /* Hide scrollbar in Chrome/Safari/Opera */
+}
+
+.card {
+  flex: 0 0 auto;
+  background: #fff;
+  border: 1px solid #ddd;
+  border-radius: 8px;
+  padding: 8px;
+  text-align: center;
+  cursor: pointer;
+  width: 100px;
+  transition: all 0.2s ease;
+  box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+}
+
+.card:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 4px 8px rgba(0,0,0,0.15);
+}
+
+.card img {
+  width: 70px;
+  height: 70px;
+  object-fit: cover;
+  border-radius: 4px;
+  margin-bottom: 5px;
+}
+
+.card p {
+  margin: 3px 0;
+  font-size: 0.85em;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.card .alt-name {
+  font-weight: bold;
+  color: #333;
+}
+
+.card .alt-brand {
+  color: #666;
+  font-size: 0.8em;
+}
+
+.card .alt-price {
+  color: #FF8181;
+  font-weight: bold;
+}
+
+/* Highlight the selected alternative card */
+.card.selected {
+  border: 2px solid #FF8181;
+  background: #fff9f9;
+  transform: translateY(-3px);
+  box-shadow: 0 4px 12px rgba(255, 129, 129, 0.3);
+}
+
+/* Buy link */
+.buy-link {
+  display: block;
+  margin-top: 5px;
+  text-decoration: none;
+  color: #FF8181;
+  font-size: 0.8em;
+  font-weight: bold;
+  padding: 2px 0;
+  border-radius: 3px;
+  transition: all 0.2s ease;
+}
+
+.buy-link:hover {
+  background: #fff0f0;
+}
+
+/* Detailed alternative info section */
+#alternativeInfo {
+  margin: 15px;
+  padding: 15px;
+  border-top: 1px solid #eee;
+  background: #fff;
+  border-radius: 8px;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+}
+
+#alternativeInfo h2 {
+  font-size: 1.1em;
+  margin: 0 0 10px;
+  color: #333;
+}
+
+#alternativeInfo p {
+  margin: 8px 0;
+  line-height: 1.4;
+  color: #555;
+}
+
+#alternativeMetrics {
+  margin: 10px 0;
+  padding-left: 20px;
+}
+
+#alternativeMetrics li {
+  margin-bottom: 5px;
+  color: #444;
+}
+
+#alternativeMetrics strong {
   color: #FF8181;
 }
-p#tagline {
-  font-size: 8px;
+
+/* Fact/highlight box in the details section */
+.fact {
+  font-style: italic;
+  background: #f0f5ff;
+  padding: 10px;
+  border-radius: 6px;
+  margin-top: 10px;
+  border-left: 3px solid #0077cc;
+  color: #0077cc;
+}
+
+/* Buy now button */
+.buy-button {
+  background: #FF8181;
+  color: white;
+  border: none;
+  border-radius: 22px;
+  padding: 8px 16px;
+  margin-top: 15px;
   font-weight: bold;
+  cursor: pointer;
+  transition: background 0.2s;
+  text-align: center;
+  text-decoration: none;
+  display: block;
 }
-div#head_image {
-  justify-items: center;
+
+.buy-button:hover {
+  background: #ff6b6b;
 }
-img#maple_leaf {
-  height: 2rem;
+
+/* Message text (no results or Canadian product message) */
+#message, #statusMessage {
+  font-style: italic;
+  color: #555;
+  margin: 20px 15px;
+  text-align: center;
+  padding: 10px;
+  border-radius: 6px;
+  background: #f9f9f9;
 }
-div#head_element {
-  display: flex;
-  justify-content: space-around;;
+
+/* Loading indicator */
+.loading-indicator {
+  text-align: center;
+  margin: 20px 0;
 }
-  /* Top bar (search input and buttons) */
-  #top-bar {
-    display: flex;
-    align-items: center;
-    gap: 10px;
-    border-radius: 22px;
-    width: 100%;
-    margin-top: 2rem;
-  }
-  #top-bar input {
-    flex: 1;
-    padding: 4px;
-    font-size: 0.9em;
-    border: 1px solid #ccc;
-    border-radius: 22px;
-  }
-  #top-bar button {
-    cursor: pointer;
-    padding: 4px 6px;
-  }
-  #settingsBtn {
-    /* Make the settings (gear) button look like an icon */
-    background: none;
-    border: none;
-    font-size: 1.2em;
-    padding: 0 4px;
-  }
-  /* Product info section */
-  #productInfo {
-    display: flex;
-    align-items: center;
-    margin-top: 10px;
-    flex-direction: column;
+
+.loading-indicator::after {
+  content: "...";
+  animation: dots 1.5s steps(5, end) infinite;
 }
-  #productInfo img {
-    width: 80px;
-    height: 80px;
-    object-fit: cover;
-    border-radius: 4px;
-    margin-right: 10px;
-  }
-  #productDetails h2 {
-    font-size: 1.1em;
-    margin: 0;
-  }
-  #productDetails p {
-    margin: 2px 0 0;
-    font-size: 0.9em;
-  }
-  /* Containers for alternatives and suggestions */
-  #alternativesContainer, #suggestionsContainer {
-    margin-top: 10px;
-  }
-  #alternativesContainer h3, #suggestionsContainer h3 {
-    font-size: 1em;
-    margin: 5px 0;
-  }
-  /* Card list (alternatives and suggestions) */
-  .card-list {
-    display: flex;
-    gap: 8px;
-    overflow-x: auto;
-    padding-bottom: 5px;
-  }
-  .card {
-    flex: 0 0 auto;
-    background: #fff;
-    border: 1px solid #ccc;
-    border-radius: 4px;
-    padding: 5px;
-    text-align: center;
-    cursor: pointer;
-    width: 80px;
-  }
-  .card img {
-    width: 60px;
-    height: 60px;
-    object-fit: cover;
-    border-radius: 4px;
-  }
-  .card p {
-    margin: 4px 0 0;
-    font-size: 0.85em;
-  }
-  /* Highlight the selected alternative card */
-  .card.selected {
-    border-color: #0077cc;
-    background: #e6f2ff;
-  }
-  /* Detailed alternative info section */
-  #alternativeInfo {
-    margin-top: 10px;
-    padding-top: 5px;
-    border-top: 1px solid #ddd;
-  }
-  #alternativeInfo h2 {
-    font-size: 1.1em;
-    margin: 0 0 5px;
-  }
-  #alternativeInfo p {
-    margin: 5px 0;
-  }
-  #alternativeMetrics {
-    margin: 5px 0;
-    padding-left: 20px;
-  }
-  #alternativeMetrics li {
-    margin-bottom: 3px;
-  }
-  /* Fact/highlight box in the details section */
-  .fact {
-    font-style: italic;
-    background: #eef;
-    padding: 5px;
-    border-radius: 4px;
-    margin-top: 5px;
-  }
-  /* Message text (no results or Canadian product message) */
-  #message, #statusMessage {
-    font-style: italic;
-    color: #555;
-    margin: 10px 0;
-  }
-  
+
+@keyframes dots {
+  0%, 20% { content: "."; }
+  40% { content: ".."; }
+  60% { content: "..."; }
+  80%, 100% { content: ""; }
+}
