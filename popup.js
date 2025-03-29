@@ -128,9 +128,31 @@ const productData = {
     if (prevSelected) prevSelected.classList.remove("selected");
     cardElement.classList.add("selected");
   }
+  async function fetchFromOpenFoodFacts(query) {
+    const url = `https://world.openfoodfacts.org/cgi/search.pl?search_terms=${encodeURIComponent(query)}&search_simple=1&action=process&json=1`;
+  
+    try {
+      const response = await fetch(url);
+      const data = await response.json();
+  
+      if (data.products && data.products.length > 0) {
+        const product = data.products[0];
+        return {
+          name: product.product_name || query,
+          origin: product.countries_tags || [],
+          brand: product.brands || "Unknown",
+          image: product.image_url || "https://via.placeholder.com/100?text=No+Image"
+        };
+      }
+    } catch (err) {
+      console.error("API Error:", err);
+    }
+    return null;
+  }
+  
   
   // Perform a search for the given product query and update the popup UI.
-  function performSearch(query) {
+  async function performSearch(query) {
     const resultsSection = $("resultSection");
     const messageBox = $("message");
     const statusMsg = $("statusMessage");
@@ -146,6 +168,7 @@ const productData = {
         break;
       }
     }
+  
     if (!productKey) {
       // Try partial match if exact not found.
       for (let name in productData) {
@@ -156,18 +179,42 @@ const productData = {
       }
     }
   
+    // ✅ ✅ ✅ Fallback to Open Food Facts API
     if (!productKey) {
-      // Product not found in our data
-      resultsSection.style.display = "none";
-      statusMsg.style.display = "none";
-      messageBox.textContent = `No Canadian alternatives found for "${searchQuery}".`;
-      messageBox.style.display = "block";
+      const apiProduct = await fetchFromOpenFoodFacts(searchQuery);
+  
+      if (!apiProduct) {
+        resultsSection.style.display = "none";
+        statusMsg.style.display = "none";
+        messageBox.textContent = `No product found for "${searchQuery}".`;
+        messageBox.style.display = "block";
+        return;
+      }
+  
+      const isCanadian = apiProduct.origin.includes("en:canada");
+  
+      $("productName").textContent = apiProduct.name;
+      $("productOrigin").textContent = `Origin: ${apiProduct.origin.join(", ").replace(/en:/g, '')}`;
+      $("productImage").src = apiProduct.image;
+      $("productImage").alt = apiProduct.name;
+  
+      resultsSection.style.display = "block";
+      messageBox.style.display = "none";
+      $("alternativeInfo").style.display = "none";
+      $("alternativesContainer").style.display = "none";
+      $("suggestionsContainer").style.display = "none";
+  
+      if (isCanadian) {
+        statusMsg.textContent = `Great news! "${apiProduct.name}" appears to be made or sold in Canada.`;
+      } else {
+        statusMsg.textContent = `This product appears to be international. Please consider a Canadian alternative.`;
+      }
+  
+      statusMsg.style.display = "block";
       return;
     }
-  
-    // We have data for this product
+
     const product = productData[productKey];
-    // Fill product name, origin, and image
     $("productName").textContent = productKey;
     $("productOrigin").textContent = `Origin: ${product.origin}`;
     const prodImgElem = $("productImage");
@@ -178,7 +225,6 @@ const productData = {
     resultsSection.style.display = "block";
   
     if (product.origin.toLowerCase() === "canada") {
-      // The product is Canadian-made; no alternatives needed.
       $("alternativesContainer").style.display = "none";
       $("suggestionsContainer").style.display = "none";
       $("alternativeInfo").style.display = "none";
@@ -187,23 +233,21 @@ const productData = {
       return;
     }
   
-    // Product is not Canadian: show alternatives and suggestions.
+    // Show alternatives
     statusMsg.style.display = "none";
     $("alternativeInfo").style.display = "block";
     const altContainer = $("alternativesContainer");
     const sugContainer = $("suggestionsContainer");
-    // Clear previous results
+  
     $("altList").innerHTML = "";
     $("suggestionList").innerHTML = "";
     altContainer.style.display = "block";
     sugContainer.style.display = "block";
   
     let firstCard = null;
-    // Populate Canadian alternative cards
     product.alternatives.forEach((alt, index) => {
       const card = document.createElement("div");
       card.className = "card";
-      // Card image and name
       const img = document.createElement("img");
       img.src = alt.image;
       img.alt = alt.name;
@@ -211,7 +255,6 @@ const productData = {
       nameP.textContent = alt.name;
       card.appendChild(img);
       card.appendChild(nameP);
-      // Click handler: highlight and show details for this alternative
       card.addEventListener("click", () => {
         highlightSelectedCard(card);
         displayAlternativeDetails(alt, product.category);
@@ -221,7 +264,7 @@ const productData = {
         firstCard = card;
       }
     });
-    // Populate user suggestion cards
+  
     product.suggestions.forEach((alt, index) => {
       const card = document.createElement("div");
       card.className = "card";
@@ -238,11 +281,10 @@ const productData = {
       });
       $("suggestionList").appendChild(card);
       if (!firstCard && index === 0) {
-        // Use first suggestion as default if no official alternatives exist
         firstCard = card;
       }
     });
-    // Hide sections if they have no content
+  
     if (product.alternatives.length === 0) {
       altContainer.style.display = "none";
     }
@@ -250,13 +292,12 @@ const productData = {
       sugContainer.style.display = "none";
     }
     if (product.alternatives.length === 0 && product.suggestions.length === 0) {
-      // No alternatives or suggestions at all
       $("alternativeInfo").style.display = "none";
       statusMsg.textContent = `No Canadian alternatives found for "${productKey}".`;
       statusMsg.style.display = "block";
       return;
     }
-    // Auto-select the first available alternative to show its details
+  
     if (firstCard) {
       firstCard.click();
     }
@@ -303,23 +344,19 @@ const productData = {
       chrome.runtime.openOptionsPage();
     });
   
-    // If opened via context menu or with a URL query, handle that; otherwise, try using highlighted text.
+    
     const params = new URLSearchParams(window.location.search);
     const queryParam = params.get("query");
     if (queryParam) {
-      // Popup opened as a standalone tab with a query parameter (fallback scenario)
       $("searchInput").value = queryParam;
       performSearch(queryParam);
     } else {
-      // Check for a stored query (from context menu via openPopup)
       chrome.storage.local.get(["searchQuery", "trigger"], (data) => {
         if (data.trigger === "contextMenu" && data.searchQuery) {
           $("searchInput").value = data.searchQuery;
           performSearch(data.searchQuery);
-          // Clear the stored query to avoid reusing it
           chrome.storage.local.remove(["searchQuery", "trigger"]);
         } else {
-          // No preset query: attempt to use any highlighted text on the page
           getHighlightedTextAndSearch();
         }
       });
